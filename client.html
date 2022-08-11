@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width", initial-scale="1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Socket test</title>
+</head>
+<body>
+    <h3>Click send the message to send the message</h3> 
+
+    <p>Enter your username below</p>
+    
+    <div id="user" contenteditable="true" style="border: 1px solid black;"></div><p>
+     <p>Enter your message below</p>
+
+    <div id="msg" contenteditable="true" style="border: 1px solid black;"></div><p>
+    <div id="send-msg" style="border: 1px solid black;">Send the message</div> <br>
+    <div id="output" style="border: 1px solid black;"></div>
+    
+    
+
+   <!--<button onclick="sendMsg()">Send message</button>--> 
+
+</body>
+<script>
+    //create the websocket connection
+    //username
+    //security
+
+
+    const socket = new WebSocket('ws://10.174.76.150:5000');
+    if(socket){
+        console.log("Created the connection");
+    }
+
+    //conn opened
+    socket.addEventListener('open', function (event) {
+        console.log('Connected to the Server!')
+    });
+
+    // Connection closed
+    socket.addEventListener('close', function (event) {
+        console.log('Disconnected from the WS Server!')
+    });
+
+    //Listen for messages
+    // socket.addEventListener('message', function (event) {
+    //     console.log('Message from server ', event.data);
+    // });
+
+
+    // JSON syntax
+     
+
+
+
+    socket.addEventListener('message', function (event) {
+
+
+
+
+        var output;
+        output = document.getElementById('output');
+        var newDiv = document.createElement("div");
+        var pre = document.createElement("p");
+        pre.innerHTML = event.data;
+        //pre = pre.replace(/(<([^>]+)>)/gi, "");
+        newDiv.prepend(pre);
+        output.prepend(newDiv);
+    });
+
+
+
+
+    $(document).ready(function(){
+    $("body").on("click", '#send-msg', function() {
+        const son = {
+        "user": $("#user").text() + ": ", 
+        "msg": $("#msg").text()
+    }
+    console.log(son.user);
+    console.log(son.msg);
+    
+
+    socket.send(son.user.replace(/[.*+?^${}()|[\]\\]/g, '') + son.msg.replace(/[.*+?^${}()|[\]\\]/g, ''));
+    
+        
+        
+    });
+});
+    
+
+//    const sendMsg = () => {
+//         let person = prompt("Enter your chat message");
+ 
+//         socket.send(person)
+//     }
+</script>
+</html>
